@@ -8,7 +8,7 @@ import { addUser } from "../utils/userSlice";
 const EditProfile = ({ user }) => {
   const [firstName, setFirstname] = useState(user.firstName);
   const [lastName, setLastName] = useState(user.lastName);
-  const [photoURL, setPhotoURL] = useState(user.photoURL);
+  const [photoURL, setPhotoURL] = useState(user.photoUrl || user.photoURL);
   const [age, setAge] = useState(user.age || "");
   const [gender, setGender] = useState(user.gender);
   const [about, setAbout] = useState(user.about);
@@ -21,12 +21,12 @@ const EditProfile = ({ user }) => {
     //clearing the errors
     setError("");
     try {
-      const res = await axios.post(
-        BASE_URL + "/profile/edit",
+      const res = await axios.patch(
+        BASE_URL + "/user/profile/edit",
         {
           firstName,
           lastName,
-          photoURL,
+          photoUrl: photoURL,
           age,
           gender,
           about,
@@ -161,7 +161,7 @@ const EditProfile = ({ user }) => {
           </div>
         </div>
         <UserCard
-          user={{ firstName, lastName, photoURL, about, age, gender , skills }}
+          user={{ firstName, lastName, photoUrl: photoURL, about, age, gender , skills }}
         />
       </div>
       {showToast && (

@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { addRequests, removeRequest } from "../utils/requestSlice";
@@ -24,7 +24,7 @@ const Requests = () => {
 
   const fetchRequests = async () => {
     try {
-      const requests = await axios.get(BASE_URL + "/user/requests/recieved", {
+      const requests = await axios.get(BASE_URL + "/getUser/requests", {
         withCredentials: true,
       });
       dispatch(addRequests(requests.data.connectionRequests));
@@ -34,7 +34,7 @@ const Requests = () => {
     }
   };
 
-  useState(() => {
+  useEffect(() => {
     fetchRequests();
   }, []);
   if (!requests) return;
@@ -53,7 +53,7 @@ const Requests = () => {
         Requests ({requests.length})
       </h1>
       {requests.map((request) => {
-        const { _id, firstName, lastName, photoURL, age, gender, about } =
+        const { _id, firstName, lastName, photoUrl, age, gender, about } =
           request.fromUserId;
 
         return (
@@ -65,7 +65,7 @@ const Requests = () => {
               <img
                 alt="photo"
                 className="w-14 h-14 rounded-full object-contain"
-                src={photoURL}
+                src={photoUrl}
               />
             </div>
             <div className="text-left m-4 p-4 ">

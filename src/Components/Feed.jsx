@@ -9,35 +9,39 @@ const Feed = () => {
   const dispatch = useDispatch();
   const feed = useSelector((store) => store.feed);
   console.log(feed);
+  
   const getFeed = async () => {
-    if (feed) return;
+    if (feed) return; // Don't fetch if feed already exists
     try {
-      const feed = await axios.get(BASE_URL + "/user/feed", {
+      const response = await axios.get(BASE_URL + "/getUser/feed", {
         withCredentials: true,
       });
-      dispatch(addFeed(feed.data));
-      // console.log(feed);
+      console.log("Feed response:", response.data); // Debug log
+      dispatch(addFeed(response.data.users));
     } catch (err) {
-      console.log(err);
+      console.error("Error fetching feed:", err); // Better error logging
+      if (err.response) {
+        console.error("Response data:", err.response.data);
+        console.error("Response status:", err.response.status);
+      }
     }
   };
+  
   useEffect(() => {
     getFeed();
-  });
+  }, []); // Fix: empty dependency array to run only once on mount
 
-  if (!feed) return;
+  if (!feed) return null; // Return null instead of undefined
 
   if (feed.length <= 0)
     return (
       <h1 className=" flex justify-center m-52 text-3xl">No more users!!!!</h1>
     );
+    
   return (
-    feed && (
-      <div className="flex flex-col items-center gap-4 my-5">
-        {feed && feed.map((user) => <UserCard key={user._id} user={user} />)}
-        {/* <UserCard user={feed[0]} /> */}
-      </div>
-    )
+    <div className="flex flex-col items-center gap-4 my-5">
+      {feed.map((user) => <UserCard key={user._id} user={user} />)}
+    </div>
   );
 };
 

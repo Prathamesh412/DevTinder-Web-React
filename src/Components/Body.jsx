@@ -14,11 +14,11 @@ const Body = () => {
 
   const fetchUser = async () => {
     try {
-      const user = await axios.get(BASE_URL + "/profile/view", {
+      const user = await axios.get(BASE_URL + "/user/profile/view", {
         withCredentials: true,
       });
       // console.log(user.data);
-      dispatch(addUser(user.data));
+      dispatch(addUser(user.data.data));
     } catch (err) {
       if (err.status == 401) {
         navigate("/login");

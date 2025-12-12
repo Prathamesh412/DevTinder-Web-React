@@ -5,12 +5,21 @@ import { useDispatch } from "react-redux";
 import { removeUserFromFeed } from "../utils/feedSlice";
 
 const UserCard = ({ user }) => {
-  console.log(user);
+  if (!user) {
+    return null;
+  }
+  
+  console.log("UserCard user data:", user);
   const dispatch = useDispatch();
-  const { _id, firstName, lastName, age, gender, about, photoURL, skills } =
-    user;
+  const { _id, firstName, lastName, age, gender, about, photoUrl, skills } =
+    user || {};
 
   console.log("Extracted Skills:", skills); // Debugging
+  
+  if (!_id || !firstName) {
+    console.error("UserCard: Missing required user data", user);
+    return null;
+  }
 
   const handleSendRequest = async (status, userId) => {
     try {
@@ -30,12 +39,12 @@ const UserCard = ({ user }) => {
   return (
     <div className="card grid-rows-1 bg-base-300 w-96 shadow-xl p-3">
       <figure>
-        <img src={photoURL} alt="Shoes" />
+        <img src={photoUrl || "https://geographyandyou.com/images/user-profile.png"} alt="User profile" />
       </figure>
       <div className="card-body">
-        <h2 className="card-title">{firstName + " " + lastName}</h2>
+        <h2 className="card-title">{(firstName || "") + " " + (lastName || "")}</h2>
         {age && gender && <p>{age + ", " + gender}</p>}
-        <p>{about}</p>
+        {about && <p>{about}</p>}
         {skills && skills.length > 0 && (
           <div>
             <h3 className="font-semibold">Skills:</h3>
@@ -63,10 +72,10 @@ const UserCard = ({ user }) => {
           <button
             className="btn btn-secondary"
             onClick={() => {
-              handleSendRequest("intrested", _id);
+              handleSendRequest("interested", _id);
             }}
           >
-            Intrested
+            interested
           </button>
         </div>
       </div>

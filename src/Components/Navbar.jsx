@@ -12,7 +12,7 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.post(BASE_URL + "/logout", {}, { withCredentials: true });
+      await axios.post(BASE_URL + "/user/logout", {}, { withCredentials: true });
       dispatch(removeUser());
       dispatch(removeFeed());
       navigate("/login");
@@ -44,7 +44,7 @@ const Navbar = () => {
                 className="btn btn-ghost btn-circle avatar hover:bg-gray-700 transition"
               >
                 <div className="w-10 rounded-full border border-gray-500">
-                  <img alt="User Photo" src={user.photoURL} />
+                  <img alt="User Photo" src={user.photoUrl || user.photoURL} />
                 </div>
               </div>
               <ul
